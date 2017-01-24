@@ -1,7 +1,4 @@
 ﻿using NUnit.Framework;
-using Xamarin.UITest;
-using System;
-using System.Threading;
 using Xamarin.UITest.Queries;
 
 namespace Xamarin.Forms.Core.UITests

@@ -1,16 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-using NUnit.Framework;
-
 using Xamarin.UITest;
-using Xamarin.UITest.Android;
-using Xamarin.UITest.iOS;
 using Xamarin.UITest.Queries;
 using System.Text.RegularExpressions;
 
@@ -18,27 +8,29 @@ namespace Xamarin.Forms.Core.UITests
 {
 	internal static class AppExtensions
 	{
-		public static AppRect ScreenBounds (this IApp app)
+		public static AppRect ScreenBounds(this IApp app)
 		{
-			return app.Query (Queries.Root ()).First().Rect;
+			return app.Query(Queries.Root()).First().Rect;
 		}
 
-		public static void NavigateBack (this IApp app)
+		public static void NavigateBack(this IApp app)
 		{
-			app.Tap (Queries.NavigationBarBackButton ());
+			app.Tap(Queries.NavigationBarBackButton());
 		}
 
-		public static void NavigateToGallery (this IApp app, string page)
+		public static void NavigateToGallery(this IApp app, string page)
 		{
 			const string goToTestButtonQuery = "* marked:'GoToTestButton'";
 
-			var text = Regex.Match (page, "'(?<text>[^']*)'").Groups["text"].Value;
-			app.EnterText (q => q.Raw ("* marked:'SearchBar'"), text);
-			
-			app.WaitForElement(q => q.Raw(goToTestButtonQuery), "Timed out waiting for Go To Test button to disappear", TimeSpan.FromSeconds(10));
+			var text = Regex.Match(page, "'(?<text>[^']*)'").Groups["text"].Value;
+			app.EnterText(q => q.Raw("* marked:'SearchBar'"), text);
 
-			app.Tap (q => q.Raw (goToTestButtonQuery));
-			app.WaitForNoElement (o => o.Raw (goToTestButtonQuery), "Timed out waiting for Go To Test button to disappear", TimeSpan.FromMinutes(2));
+			app.WaitForElement(q => q.Raw(goToTestButtonQuery), "Timed out waiting for Go To Test button to disappear",
+				TimeSpan.FromSeconds(10));
+
+			app.Tap(q => q.Raw(goToTestButtonQuery));
+			app.WaitForNoElement(o => o.Raw(goToTestButtonQuery), "Timed out waiting for Go To Test button to disappear",
+				TimeSpan.FromMinutes(2));
 		}
 	}
 }

@@ -1,11 +1,5 @@
 ﻿using NUnit.Framework;
-using Xamarin.UITest;
-using System;
-using System.Threading;
-
-using Xamarin.UITest.Android;
 using Xamarin.UITest.iOS;
-using Xamarin.UITest.Queries;
 
 namespace Xamarin.Forms.Core.UITests
 {
@@ -13,14 +7,13 @@ namespace Xamarin.Forms.Core.UITests
 	[Category(UITestCategories.Cells)]
 	internal class ContextActionsListUITests : BaseTestFixture
 	{
-
-		public ContextActionsListUITests ()
+		public ContextActionsListUITests()
 		{
 		}
 
-		protected override void NavigateToGallery ()
+		protected override void NavigateToGallery()
 		{
-			App.NavigateToGallery (GalleryQueries.ContextActionsListGallery);
+			App.NavigateToGallery(GalleryQueries.ContextActionsListGallery);
 		}
 
 		const string cell0 = "Subject Line 0";
@@ -29,7 +22,6 @@ namespace Xamarin.Forms.Core.UITests
 		const string delete = "Delete";
 		const string clear = "Clear Items";
 		const string mark = "Mark";
-
 
 #if __ANDROID__
 		[Test]
@@ -66,16 +58,19 @@ namespace Xamarin.Forms.Core.UITests
 				return;
 			}
 
-			if (device.IsTablet) {
-				var screenBounds = App.Query (PlatformQueries.Root)[0].Rect;
-				var cellBounds = App.Query (q => q.Marked (cell0))[0].Rect;
-				App.DragCoordinates (screenBounds.Width - 10, cellBounds.CenterY, 10, cellBounds.CenterY);
+			if (device.IsTablet)
+			{
+				var screenBounds = App.Query(PlatformQueries.Root)[0].Rect;
+				var cellBounds = App.Query(q => q.Marked(cell0))[0].Rect;
+				App.DragCoordinates(screenBounds.Width - 10, cellBounds.CenterY, 10, cellBounds.CenterY);
 				App.Screenshot("I see context actions");
-				App.Tap (q => q.Marked ("More"));
-				App.Screenshot ("Should see Popover");
-				App.TapCoordinates (50, 50);
-				App.Screenshot ("I should not crash");
-			} else {
+				App.Tap(q => q.Marked("More"));
+				App.Screenshot("Should see Popover");
+				App.TapCoordinates(50, 50);
+				App.Screenshot("I should not crash");
+			}
+			else
+			{
 				Assert.Inconclusive("Not testing iOS Phone");
 			}
 		}
@@ -86,13 +81,13 @@ namespace Xamarin.Forms.Core.UITests
 	[Category(UITestCategories.Cells)]
 	internal class ContextActionsTableUITests : BaseTestFixture
 	{
-		public ContextActionsTableUITests ()
+		public ContextActionsTableUITests()
 		{
 		}
 
-		protected override void NavigateToGallery ()
+		protected override void NavigateToGallery()
 		{
-			App.NavigateToGallery (GalleryQueries.ContextActionsTableGallery);
+			App.NavigateToGallery(GalleryQueries.ContextActionsTableGallery);
 		}
 
 		const string cell0 = "Subject Line 0";
@@ -119,4 +114,3 @@ namespace Xamarin.Forms.Core.UITests
 #endif
 	}
 }
-
