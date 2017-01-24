@@ -721,7 +721,7 @@ namespace Xamarin.Forms.Build.Tasks
 			if (CanAdd(parent, localName, valueNode, context))
 				return Add(parent, localName, valueNode, iXmlLineInfo, context);
 
-			throw new XamlParseException($"No property, bindable property, or event found for '{localName}'", iXmlLineInfo);
+			throw new XamlParseException($"No property, bindable property, or event found for '{localName}', or mismatching type between value and property.", iXmlLineInfo);
 		}
 
 		static FieldReference GetBindablePropertyReference(VariableDefinition parent, string namespaceURI, ref string localName, out bool attached, ILContext context, IXmlLineInfo iXmlLineInfo)
@@ -835,6 +835,10 @@ namespace Xamarin.Forms.Build.Tasks
 			VariableDefinition varValue;
 			if (!context.Variables.TryGetValue(valueNode as IElementNode, out varValue))
 				return false;
+			var implicitOperator = varValue.VariableType.GetImplicitOperatorTo(module.Import(typeof(BindingBase)), module);
+			if (implicitOperator != null)
+				return true;
+
 			return varValue.VariableType.InheritsFromOrImplements(module.Import(typeof(BindingBase)));
 		}
 
@@ -842,6 +846,7 @@ namespace Xamarin.Forms.Build.Tasks
 		{
 			var module = context.Body.Method.Module;
 			var varValue = context.Variables [elementNode];
+			var implicitOperator = varValue.VariableType.GetImplicitOperatorTo(module.Import(typeof(BindingBase)), module);
 
 			//TODO: check if parent is a BP
 			var setBinding = typeof(BindableObject).GetMethod("SetBinding", new [] { typeof(BindableProperty), typeof(BindingBase) });
@@ -849,6 +854,9 @@ namespace Xamarin.Forms.Build.Tasks
 			yield return Instruction.Create(OpCodes.Ldloc, parent);
 			yield return Instruction.Create(OpCodes.Ldsfld, bpRef);
 			yield return Instruction.Create(OpCodes.Ldloc, varValue);
+			if (implicitOperator != null) 
+//				IL_000f:  call !0 class [Xamarin.Forms.Core]Xamarin.Forms.OnPlatform`1<BindingBase>::op_Implicit(class [Xamarin.Forms.Core]Xamarin.Forms.OnPlatform`1<!0>)
+				yield return Instruction.Create(OpCodes.Call, module.Import(implicitOperator));
 			yield return Instruction.Create(OpCodes.Callvirt, module.Import(setBinding));
 		}
 
