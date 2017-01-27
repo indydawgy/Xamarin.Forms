@@ -301,13 +301,13 @@ namespace Xamarin.Forms.Maps.WinRT
             Control.PanInteractionMode = Element.HasScrollEnabled ? MapPanInteractionMode.Auto : MapPanInteractionMode.Disabled;
         }
 #else
-		void UpdateHasZoomEnabled()
-		{
-		}
+        void UpdateHasZoomEnabled()
+        {
+        }
 
-		void UpdateHasScrollEnabled()
-		{
-		}
+        void UpdateHasScrollEnabled()
+        {
+        }
 #endif
     }
 }
